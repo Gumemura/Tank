@@ -1,0 +1,35 @@
+--- TODO ---
+MPV
+tanque tomar dano
+missil dar dano
+inimigos e seus comportamentos (muito foda)
+dois tipos de municoes (AP e HE)
+metralhadora do tanque comandada pelo mouse
+fundo para o jogo
+sprite de cratera formada por explocao
+talvez eu tenha q refazer a logica de movimento do tanque pq caso ele colida com um outro rigidbody, reaja melhor
+reload
+objetos p decorar
+
+NTH (NICE TO HAVE)
+lancçar fumaça (quem atirar em alvo na fumaca perde acuraci) (foda)
+outro tipo de tanque (menor calibre, atira mais rapido)
+sprite de rastro da esteira do tanque
+
+ZERO PRIORIDADE
+projetil que segue alvo (missil guiado)
+torreta controlada pelo mouse (upgrade late game)
+animacao de destruicao em que torreta é lançada pra cima esai fogo do buraco
+
+--- FAZENDA ---
+
+
+--- FAZIDO ---
+movimento do tanque
+levar em conta massa e poder do motor
+animacao da esteria (pode melhorar)
+movimentacao da torreta
+controle de altura da torreta
+calcular algo do projetil
+explosao
+renderizar linha de mira do canhao
