@@ -54,23 +54,14 @@ namespace Units.Vehicle.Tank
             shootEffect = turret.Find(SHOOT_EFFECT_NAME).GetComponent<Animator>();
         }
 
-        void Update()
+        public override void Steer(float turningForce)
         {
-            base.Update();
-            ChangeCannonHeight();
-            DrawLineOfFire();
-            RotateTurret();
-            Fire();
+            transform.rotation = GameDomain.NewRotation(transform, turningForce * stearingSpeed, INVERTER);
         }
 
-        public override void Steer()
+        public void RotateTurret(float rotateTurretCommand)
         {
-            transform.rotation = GameDomain.NewRotation(transform, Input.GetAxis("Horizontal") * stearingSpeed, INVERTER);
-        }
-
-        private void RotateTurret()
-        {
-            turret.rotation = GameDomain.NewRotation(turret, Input.GetAxisRaw("AltHorizontal") * turretTurningSpeed, INVERTER);
+            turret.rotation = GameDomain.NewRotation(turret, rotateTurretCommand * turretTurningSpeed, INVERTER);
         }
 
         public override void MoveFowardAnimation(bool activateMovimentAnimation)
@@ -85,7 +76,7 @@ namespace Units.Vehicle.Tank
             }
         }
 
-        private void DrawLineOfFire()
+        public void DrawLineOfFire()
         {
             LineRenderer lineRenderer = turret.GetComponent<LineRenderer>();
 
@@ -93,10 +84,10 @@ namespace Units.Vehicle.Tank
             lineRenderer.SetPosition(1, aimingArea);
         }
 
-        private void ChangeCannonHeight()
+        public void ChangeCannonHeight(float changeCannonHeight)
         //This method also calculates the aiming point (algo used to draw the aiming line)
         {
-            cannonElevation += Input.GetAxisRaw("AltVertical") * cannonElevationChangeRate * Time.deltaTime;
+            cannonElevation += changeCannonHeight * cannonElevationChangeRate * Time.deltaTime;
             cannonElevation = Mathf.Clamp(cannonElevation, cannonCapElevation.x, cannonCapElevation.y);
 
             Vector3 referencePoint = turret.position;
@@ -105,9 +96,9 @@ namespace Units.Vehicle.Tank
             aimingArea = referencePoint + displacement;
         }
 
-        private void Fire()
+        public void Fire(bool fireCommand)
         {
-            if (Input.GetKeyDown(KeyCode.Space) && cannonReady)
+            if (fireCommand && cannonReady)
             {
                 cannonOriginalLocalPos = cannon.localPosition;
                 shootInstant = Time.time;

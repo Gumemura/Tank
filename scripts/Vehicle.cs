@@ -24,31 +24,31 @@ namespace Units.Vehicle
             stearingSpeed = maxAcceleration * 2.5f;
         }
 
-        public void Update()
-        {
-            Accelerate();
-            Steer();
-        }
+        // public void Update()
+        // {
+        //     Accelerate();
+        //     Steer();
+        // }
 
-        private float SpeedCap()
+        private float SpeedCap(float speedCapButtonPressed)
         {
-            if (Input.GetKey(KeyCode.LeftShift))
+            if (speedCapButtonPressed != 0)
             {
                 return 0.25f;
             }
             return 1;
         }
 
-        private void CalculateAcceleration()
+        private void CalculateAcceleration(float accelerationCommand)
         {
-            float inputVertical = Input.GetAxisRaw("Vertical");
+            float inputVertical = accelerationCommand;
             float accelerationTarget;
             float oppositeForce = 1;
 
-            if (inputVertical > 0){
-                accelerationTarget = maxAcceleration * SpeedCap();
+            if (accelerationCommand > 0){
+                accelerationTarget = maxAcceleration * SpeedCap(accelerationCommand);
             }
-            else if (inputVertical < 0)
+            else if (accelerationCommand < 0)
             {
                 accelerationTarget = maxDeceleration;
             }
@@ -57,16 +57,16 @@ namespace Units.Vehicle
                 accelerationTarget = 0;
             }
 
-            if (Math.Sign(currentAcceleration) != Math.Sign(inputVertical))
+            if (Math.Sign(currentAcceleration) != Math.Sign(accelerationCommand))
             {
                 oppositeForce = 3;
             }
             currentAcceleration = Mathf.MoveTowards(currentAcceleration, accelerationTarget, ((enginePower * horsepowerWeightRatio)/vehicleMass) * Time.deltaTime * oppositeForce);
         }
 
-        protected void Accelerate()
+        public void Accelerate(float accelerationCommand)
         {
-            CalculateAcceleration();
+            CalculateAcceleration(accelerationCommand);
 
             currentSpeed = currentAcceleration * Time.deltaTime;
 
@@ -77,7 +77,7 @@ namespace Units.Vehicle
         {
             transform.position += transform.up * speed;
             if (hasMovimentAnimation)
-            {dsdassdas
+            {
                 if(currentSpeed != 0)
                 {
                     MoveFowardAnimation(true);
@@ -89,7 +89,7 @@ namespace Units.Vehicle
             }
         }
 
-        public abstract void Steer();
+        public abstract void Steer(float turningForce);
 
         public abstract void MoveFowardAnimation(bool activateMovimentAnimation);
     }

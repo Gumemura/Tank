@@ -22,7 +22,7 @@ torreta controlada pelo mouse (upgrade late game)
 animacao de destruicao em que torreta é lançada pra cima esai fogo do buraco
 
 --- FAZENDA ---
-
+basico de tropa: andar e entrar em veiculos
 
 --- FAZIDO ---
 movimento do tanque
@@ -33,3 +33,4 @@ controle de altura da torreta
 calcular algo do projetil
 explosao
 renderizar linha de mira do canhao
+refatorar controle do tanque para criar um controler universal que possa ser usado por ia
