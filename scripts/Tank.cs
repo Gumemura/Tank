@@ -11,7 +11,7 @@ namespace Units.Vehicle.Tank
         private const int INVERTER = -1;
         private const float CANNON_RECOIL = .35f;
         private const float CANNON_RECOIL_SPEED = .6f;
-        private const float TANK_RECOIL_SPEED = -.4f;
+        private const float TANK_RECOIL_SPEED = -400;
         private const float TANK_RECOIL_TIME = .05f;
         private const float ACCURACY_PENALTY_RANGE =.3f;
         private const string TURRET_NAME = "turret";
@@ -54,9 +54,9 @@ namespace Units.Vehicle.Tank
             shootEffect = turret.Find(SHOOT_EFFECT_NAME).GetComponent<Animator>();
         }
 
-        public override void Steer(float turningForce)
+        public override void Steer(float turningCommand)
         {
-            transform.rotation = GameDomain.NewRotation(transform, turningForce * stearingSpeed, INVERTER);
+            vehicleRigidbody.MoveRotation(vehicleRigidbody.rotation + (turningCommand  * stearingSpeed * INVERTER * Time.fixedDeltaTime));
         }
 
         public void RotateTurret(float rotateTurretCommand)
@@ -78,10 +78,7 @@ namespace Units.Vehicle.Tank
 
         public void DrawLineOfFire()
         {
-            LineRenderer lineRenderer = turret.GetComponent<LineRenderer>();
-
-            lineRenderer.SetPosition(0, turret.position);
-            lineRenderer.SetPosition(1, aimingArea);
+            GameDomain.DrawLineOfFire(turret, aimingArea);
         }
 
         public void ChangeCannonHeight(float changeCannonHeight)
@@ -108,7 +105,7 @@ namespace Units.Vehicle.Tank
                 TriggerShootEffect();
             }
             ReturnCannon();
-            TankRecoilFromShoot();
+            //TankRecoilFromShoot();
         }
 
         public void ShootProjectile()
@@ -137,7 +134,7 @@ namespace Units.Vehicle.Tank
             turretRotationOnShoot = turret.localEulerAngles.z;
             if (Time.time < shootInstant + TANK_RECOIL_TIME)
             {
-                MoveFoward(TANK_RECOIL_SPEED * Time.deltaTime * Mathf.Cos(turretRotationOnShoot * (Mathf.PI/180)));
+                Accelerate(TANK_RECOIL_SPEED * Mathf.Cos(turretRotationOnShoot * (Mathf.PI/180)));
             }
         }
 

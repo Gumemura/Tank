@@ -1,11 +1,14 @@
-using UnityEngine;
 using System;
+using UnityEngine;
 
 namespace Units.Vehicle
 {
     public abstract class Vehicle: MonoBehaviour
     {
-        private float horsepowerWeightRatio = 20;
+        private const float TURNING_SPEED_MULTIPLIER = 50;
+        private const float FORCE_MULTIPLIER = 2000;
+        private const float HORSE_POWER_RATIO = 100;
+        private const float REVER_MAX_ACCELERATION_RATIO = 3;
 
         [SerializeField]
         public float stearingSpeed; // Turning speed
@@ -15,38 +18,39 @@ namespace Units.Vehicle
 
         private float currentSpeed;
 
+        [HideInInspector]
+        public Rigidbody2D vehicleRigidbody;
+
         public bool hasMovimentAnimation = false;
 
         public void Start()
         {
-            maxAcceleration = enginePower / vehicleMass * 100;
-            maxDeceleration = maxAcceleration / 3 * -1;
-            stearingSpeed = maxAcceleration * 2.5f;
+            maxAcceleration = (enginePower * HORSE_POWER_RATIO)/ vehicleMass;
+            maxDeceleration = maxAcceleration / REVER_MAX_ACCELERATION_RATIO * -1;
+            stearingSpeed = maxAcceleration * TURNING_SPEED_MULTIPLIER;
+            vehicleRigidbody = transform.GetComponent<Rigidbody2D>();
         }
 
-        // public void Update()
-        // {
-        //     Accelerate();
-        //     Steer();
-        // }
-
-        private float SpeedCap(float speedCapButtonPressed)
+        public void Update()
         {
-            if (speedCapButtonPressed != 0)
+
+        }
+
+        private float SpeedCap(bool speedCapButtonPressed)
+        {
+            if (speedCapButtonPressed)
             {
                 return 0.25f;
             }
             return 1;
         }
 
-        private void CalculateAcceleration(float accelerationCommand)
+        private void CalculateAcceleration(float accelerationCommand, bool speedCapCommand)
         {
-            float inputVertical = accelerationCommand;
             float accelerationTarget;
-            float oppositeForce = 1;
 
             if (accelerationCommand > 0){
-                accelerationTarget = maxAcceleration * SpeedCap(accelerationCommand);
+                accelerationTarget = maxAcceleration * SpeedCap(speedCapCommand);
             }
             else if (accelerationCommand < 0)
             {
@@ -57,28 +61,21 @@ namespace Units.Vehicle
                 accelerationTarget = 0;
             }
 
-            if (Math.Sign(currentAcceleration) != Math.Sign(accelerationCommand))
+            currentAcceleration = Mathf.MoveTowards(currentAcceleration, accelerationTarget, 1);
+        }
+
+        public void Accelerate(float accelerationCommand, bool speedCapCommand = false)
+        {
+            if (vehicleRigidbody)
             {
-                oppositeForce = 3;
+                CalculateAcceleration(accelerationCommand, speedCapCommand);
+
+                vehicleRigidbody.AddRelativeForce(Vector2.up * currentAcceleration * enginePower * FORCE_MULTIPLIER);
             }
-            currentAcceleration = Mathf.MoveTowards(currentAcceleration, accelerationTarget, ((enginePower * horsepowerWeightRatio)/vehicleMass) * Time.deltaTime * oppositeForce);
-        }
 
-        public void Accelerate(float accelerationCommand)
-        {
-            CalculateAcceleration(accelerationCommand);
-
-            currentSpeed = currentAcceleration * Time.deltaTime;
-
-            MoveFoward(currentSpeed);
-        }
-
-        public void MoveFoward(float speed)
-        {
-            transform.position += transform.up * speed;
             if (hasMovimentAnimation)
             {
-                if(currentSpeed != 0)
+                if(currentAcceleration != 0)
                 {
                     MoveFowardAnimation(true);
                 }
@@ -89,8 +86,10 @@ namespace Units.Vehicle
             }
         }
 
-        public abstract void Steer(float turningForce);
+        public abstract void Steer(float turningCommand);
 
         public abstract void MoveFowardAnimation(bool activateMovimentAnimation);
+
+        //public abstract void SetRigidodyParams(float mass, float lienarDrag);
     }
 }

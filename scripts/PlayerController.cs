@@ -1,25 +1,57 @@
-using Units.Vehicle.Tank;
+using Controller.Units.SoldierC;
 using Controller.Units.Vehicle;
+using Units.Soldier;
+using Units.Vehicle.Tank;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+namespace Controller.Player
 {
-    private const string VEHICLE_CONTROLER = "PlayerVechicleController";
-    public Tank currentTank;
-    private VehicleController vehicleController;
-
-    // Start is called before the first frame update
-    void Start()
+    public class PlayerController : MonoBehaviour
     {
-        vehicleController = transform.Find(VEHICLE_CONTROLER).GetComponent<VehicleController>();
-    }
+        private const string VEHICLE_CONTROLER = "PlayerVechicleController";
+        private const string SOLDIER_CONTROLER = "PlayerSoldierController";
+        private const string HERO = "PlayerHero";
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (currentTank)
+        public Tank currentTank;
+        public Soldier currentSoldier;
+        public Soldier hero;
+
+        private VehicleController vehicleController;
+        private SoldierController soldierController;
+
+        // Start is called before the first frame update
+        void Start()
         {
-            vehicleController.GetControledTank(currentTank);
+            hero = transform.Find(HERO).GetComponent<Soldier>();
+            currentSoldier = hero;
+
+            vehicleController = transform.Find(VEHICLE_CONTROLER).GetComponent<VehicleController>();
+            soldierController = transform.Find(SOLDIER_CONTROLER).GetComponent<SoldierController>();
         }
-    }
+
+        // Update is called once per frame
+        void Update()
+        {
+            if (currentTank)
+            {
+                vehicleController.SetControlledTank(currentTank);
+            }
+            else if (currentSoldier)
+            {
+                soldierController.SetControlledSoldier(currentSoldier);
+            }
+        }
+
+        // private void GetInVehicle(Vehicle vehicle)
+        // {
+        //     currentTank = vehicle;
+        //     currentSoldier = null;
+        // }
+
+        // private void GetOutVehicle()
+        // {
+        //     currentTank = null;
+        //     currentSoldier = hero;
+        // }
+    }    
 }
