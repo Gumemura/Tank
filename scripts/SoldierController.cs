@@ -9,7 +9,7 @@ namespace Controller.Units.SoldierC
         private Soldier soldier;
 
         // Start is called before the first frame update
-        void Start()
+        void Awake()
         {
             soldier = null;
         }
@@ -19,6 +19,7 @@ namespace Controller.Units.SoldierC
             if (soldier)
             {
                 soldier.Move(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"), Input.GetKey(KeyCode.LeftShift), Input.GetMouseButton(1));
+                GameDomain.RotateWithMouse(soldier.GetComponent<Transform>());
             }
         }
 
@@ -27,8 +28,9 @@ namespace Controller.Units.SoldierC
         {
             if (soldier)
             {
-                GameDomain.RotateWithMouse(soldier.GetComponent<Transform>());
                 soldier.DrawLineOfFire(Input.GetMouseButton(1), GameDomain.MousePositionToScreen());
+                soldier.GetInteractable();
+                soldier.InteractWithInteractable(Input.GetKey(KeyCode.F));
             }
         }
 

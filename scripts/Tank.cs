@@ -1,10 +1,10 @@
 using UnityEngine;
-using Units.Vehicle;
+using Units.VehicleNS;
 using Game.Core;
 using Units.Resources.Projectile;
 using System.Collections;
 
-namespace Units.Vehicle.Tank
+namespace Units.VehicleNS.TankNS
 {
     public class Tank : Vehicle
     {

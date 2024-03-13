@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Units.Vehicle
+namespace Units.VehicleNS
 {
     public abstract class Vehicle: MonoBehaviour
     {
@@ -89,7 +89,5 @@ namespace Units.Vehicle
         public abstract void Steer(float turningCommand);
 
         public abstract void MoveFowardAnimation(bool activateMovimentAnimation);
-
-        //public abstract void SetRigidodyParams(float mass, float lienarDrag);
     }
 }

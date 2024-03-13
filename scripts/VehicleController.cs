@@ -1,15 +1,15 @@
-using Units.Vehicle;
-using Units.Vehicle.Tank;
+using Units.VehicleNS;
+using Units.VehicleNS.TankNS;
 using UnityEngine;
 
-namespace Controller.Units.Vehicle
+namespace Controller.Units.VehicleNS
 {
     public class VehicleController : MonoBehaviour
     {
         private Tank tank;
 
         // Start is called before the first frame update
-        void Start()
+        void Awake()
         {
             tank = null;
         }

@@ -1,9 +1,17 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Game.Core
 {
     public static class GameDomain
     {
+        public static List<string> tags = new List<string>()
+        {
+            "Tank", 
+            "Soldier",
+            "Item"
+        };
+
         public static Quaternion NewRotation(Transform obj, float rotatingSpeed, int inverter = 1)
         {
             float newRotation = obj.rotation.eulerAngles.z + (rotatingSpeed * Time.deltaTime * inverter);

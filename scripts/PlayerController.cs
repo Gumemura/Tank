@@ -1,7 +1,9 @@
 using Controller.Units.SoldierC;
-using Controller.Units.Vehicle;
+using Controller.Units.VehicleNS;
+using Game.UI;
 using Units.Soldier;
-using Units.Vehicle.Tank;
+using Units.VehicleNS;
+using Units.VehicleNS.TankNS;
 using UnityEngine;
 
 namespace Controller.Player
@@ -15,6 +17,7 @@ namespace Controller.Player
         public Tank currentTank;
         public Soldier currentSoldier;
         public Soldier hero;
+        public CircleFillHandler interactionLoader;
 
         private VehicleController vehicleController;
         private SoldierController soldierController;
@@ -27,31 +30,46 @@ namespace Controller.Player
 
             vehicleController = transform.Find(VEHICLE_CONTROLER).GetComponent<VehicleController>();
             soldierController = transform.Find(SOLDIER_CONTROLER).GetComponent<SoldierController>();
+
+            soldierController.SetControlledSoldier(currentSoldier);
         }
 
         // Update is called once per frame
         void Update()
         {
-            if (currentTank)
-            {
-                vehicleController.SetControlledTank(currentTank);
-            }
-            else if (currentSoldier)
-            {
-                soldierController.SetControlledSoldier(currentSoldier);
-            }
+
         }
 
-        // private void GetInVehicle(Vehicle vehicle)
-        // {
-        //     currentTank = vehicle;
-        //     currentSoldier = null;
-        // }
+        public Transform GetCurrentActiveEntity()
+        {
+            if (currentSoldier) 
+            {
+                return currentSoldier.GetComponent<Transform>();
+            }
+            else if (currentTank)
+            {
+                return currentTank.GetComponent<Transform>();
+            }
+            return null;
+        }
 
-        // private void GetOutVehicle()
-        // {
-        //     currentTank = null;
-        //     currentSoldier = hero;
-        // }
+        public Soldier GetDefaultHero()
+        {
+            return hero;
+        }
+
+        private void RenderInteractionLoading(float interactonLoaderStatus)
+        {
+            interactionLoader.FillCircleValue(interactonLoaderStatus);
+        }
+
+        private void GetInTank(Tank tank)
+        {
+            currentTank = tank;
+            currentSoldier.gameObject.SetActive(false);
+
+            vehicleController.SetControlledTank(currentTank);
+            soldierController.SetControlledSoldier(null); 
+        }
     }    
 }
